@@ -578,7 +578,11 @@ void *sync_layer_thread(void *ptr)
     free(ptr);
     return 0;
 }
-
+/*
+*net:train net
+n:gpus count
+j: layers count
+*/
 pthread_t sync_layer_in_thread(network *nets, int n, int j)
 {
     pthread_t thread;
@@ -589,7 +593,11 @@ pthread_t sync_layer_in_thread(network *nets, int n, int j)
     if(pthread_create(&thread, 0, sync_layer_thread, ptr)) error("Thread creation failed");
     return thread;
 }
-
+/*
+*nets:inpu train net
+n:gpus count
+interval:sync interval
+*/
 void sync_nets(network *nets, int n, int interval)
 {
     int j;
