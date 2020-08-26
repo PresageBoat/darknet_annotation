@@ -594,6 +594,7 @@ pthread_t sync_layer_in_thread(network *nets, int n, int j)
     return thread;
 }
 /*
+function:sync conv weight&& bn weight (*.cfg [convolution])
 *nets:inpu train net
 n:gpus count
 interval:sync interval
@@ -647,6 +648,7 @@ float train_networks(network *nets, int n, data d, int interval)
     *nets[0].cur_iteration += (n - 1);
     // remove this line, when you will save to weights-file both: seen & cur_iteration
     *nets[0].seen = nets[0].batch * nets[0].subdivisions * get_current_iteration(nets[0]); 
+	//update loss and weight every interval batchsize 
     if (get_current_iteration(nets[0]) % interval == 0)
     {
         printf("Syncing... ");
