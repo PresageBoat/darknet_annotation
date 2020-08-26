@@ -279,6 +279,8 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
             loss = train_network_waitkey(net, train, wait_key);
         }
         else {
+			//loss = train_networks(nets, ngpus, train, 4);
+			//modified by edificewang 20200826
             loss = train_networks(nets, ngpus, train, ngpus);
         }
 #else

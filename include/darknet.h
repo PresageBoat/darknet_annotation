@@ -648,77 +648,77 @@ typedef enum {
 // network.h
 typedef struct network {
     int n;
-    int batch;
-    uint64_t *seen;
-    int *cur_iteration;
-    float loss_scale;
+    int batch;//  ::(*.cfg )batch/subdivisions 1  by default
+    uint64_t *seen;// 0 by default
+    int *cur_iteration;// 0 by default
+    float loss_scale;// 1 by default
     int *t;
     float epoch;
-    int subdivisions;
+    int subdivisions;// 1 by default
     layer *layers;
     float *output;
-    learning_rate_policy policy;
+    learning_rate_policy policy;//constant by default
     int benchmark_layers;
 
-    float learning_rate;
-    float learning_rate_min;
+    float learning_rate;// 0.001 by default
+    float learning_rate_min;// 0.00001 by default
     float learning_rate_max;
-    int batches_per_cycle;
-    int batches_cycle_mult;
-    float momentum;
-    float decay;
-    float gamma;
-    float scale;
-    float power;
-    int time_steps;
-    int step;
-    int max_batches;
+    int batches_per_cycle;// network->max_batches by default
+    int batches_cycle_mult;// 2 by default
+    float momentum;// 0.9 by default
+    float decay;// 0.0001 by default
+    float gamma;//1 by default
+    float scale;//1 by default
+    float power;//4 by default
+    int time_steps;// 1 by default
+    int step;//1 by default
+    int max_batches;// 0 by default
     int num_boxes;
     int train_images_num;
-    float *seq_scales;
-    float *scales;
-    int   *steps;
+    float *seq_scales;//(*.cfg)seq_scales=1  by default
+    float *scales;//(*.cfg)scales=.1,.1 by default ,must set while lr_policy=steps
+    int   *steps;//(*.cfg)steps=400000,450000 by default,must set while lr_policy=steps
     int num_steps;
-    int burn_in;
-    int cudnn_half;
+    int burn_in;//0 by default
+    int cudnn_half;// depends on gpus compute capability
 
-    int adam;
-    float B1;
-    float B2;
-    float eps;
+    int adam;//0 by default
+    float B1;//0.9 by default
+    float B2;//0.999 by default
+    float eps;//0.000001 by default
 
-    int inputs;
+    int inputs;//net->h * net->w * net->c by default
     int outputs;
     int truths;
     int notruth;
-    int h, w, c;
-    int max_crop;
-    int min_crop;
+    int h, w, c;//0 by default
+    int max_crop;//net->w*2 by default
+    int min_crop;//net->w by default
     float max_ratio;
     float min_ratio;
     int center;
     int flip; // horizontal flip 50% probability augmentaiont for classifier training (default = 1)
-    int gaussian_noise;
-    int blur;
-    int mixup;
-    float label_smooth_eps;
-    int resize_step;//the gap of random resize
-    int attention;
+    int gaussian_noise;//0 by default
+    int blur;//0 by default
+    int mixup;//0 by default
+    float label_smooth_eps;//0.0f by default
+    int resize_step;//the gap of random resize 32 by default
+    int attention;////0 by default
     int adversarial;    
-    float adversarial_lr;
-    int letter_box;
-    float angle;
-    float aspect;
-    float exposure;
-    float saturation;
-    float hue;
+    float adversarial_lr;//0 by default
+    int letter_box;//0 by default
+    float angle;//0 by default
+    float aspect;//1 by default
+    float exposure;//1 by default
+    float saturation;//1 by default
+    float hue;//0 by default
     int random;
-    int track;
-    int augment_speed;
+    int track;// 0 by default
+    int augment_speed;// 2 by default
     int sequential_subdivisions;
-    int init_sequential_subdivisions;
+    int init_sequential_subdivisions;// net->subdivisions by default
     int current_subdivision;
-    int try_fix_nan;
+    int try_fix_nan;// 0 by default
 
     int gpu_index;
     tree *hierarchy;
@@ -751,9 +751,9 @@ typedef struct network {
     float *state_delta_gpu;
     size_t max_delta_gpu_size;
 
-    int optimized_memory;
-    int dynamic_minibatch;//default 0
-    size_t workspace_size_limit;
+    int optimized_memory;// 0 by default
+    int dynamic_minibatch;// 0 by default
+    size_t workspace_size_limit;//1024MB by default
 } network;
 
 // network.h
