@@ -291,9 +291,9 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
         avg_loss = avg_loss*.9 + loss*.1;
 
         const int iteration = get_current_iteration(net);
-        //i = get_current_batch(net);
 
-        int calc_map_for_each = 4 * train_images_num / (net.batch * net.subdivisions);  // calculate mAP for each 4 Epochs
+		// calculate mAP for each 4 Epochs
+        int calc_map_for_each = 4 * train_images_num / (net.batch * net.subdivisions);  
         calc_map_for_each = fmax(calc_map_for_each, 100);
         int next_map_calc = iter_map + calc_map_for_each;
         next_map_calc = fmax(next_map_calc, net.burn_in);
@@ -307,7 +307,14 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
             if (iteration < net.burn_in * 3) fprintf(stderr, "\n Tensor Cores are disabled until the first %d iterations are reached.", 3 * net.burn_in);
             else fprintf(stderr, "\n Tensor Cores are used.");
         }
-        printf("\n %d: %f, %f avg loss, %f rate, %lf seconds, %d images, %f hours left\n", iteration, loss, avg_loss, get_current_rate(net), (what_time_is_it_now() - time), iteration*imgs, avg_time);
+        printf("\n Iteration(%d):\
+						Current batch loss(%f), \
+						Train avg_loss(%f ), \
+						Current lr(%f ), \
+						Batch training time(%lf seconds), \
+						Have trained(%d images), \
+						Remaining training time(%f )hours left\n",
+						iteration, loss, avg_loss, get_current_rate(net), (what_time_is_it_now() - time), iteration*imgs, avg_time);
 
         int draw_precision = 0;
         if (calc_map && (iteration >= next_map_calc || iteration == net.max_batches)) {

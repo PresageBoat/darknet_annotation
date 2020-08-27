@@ -120,6 +120,13 @@ void backward_network(network net, network_state state);
 void update_network(network net);
 
 float train_network(network net, data d);
+
+/*
+@brief the main train function
+net:input train net
+d:input train data
+wait_key:0 by default ,if set train function will wait 5 milliseconds
+*/
 float train_network_waitkey(network net, data d, int wait_key);
 float train_network_batch(network net, data d, int n);
 float train_network_sgd(network net, data d, int n);
