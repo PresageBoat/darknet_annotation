@@ -313,7 +313,7 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
 						Current lr(%f ), \
 						Batch training time(%lf seconds), \
 						Have trained(%d images), \
-						Remaining training time(%f )hours left\n",
+						Remaining training time(%f )hours\n",
 						iteration, loss, avg_loss, get_current_rate(net), (what_time_is_it_now() - time), iteration*imgs, avg_time);
 
         int draw_precision = 0;
@@ -373,9 +373,13 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
         draw_train_loss(windows_name, img, img_size, avg_loss, max_img_loss, iteration, net.max_batches, mean_average_precision, draw_precision, "mAP%", dont_show, mjpeg_port, avg_time);
 #endif    // OPENCV
 
-        //if (i % 1000 == 0 || (i < 1000 && i % 100 == 0)) {
-        //if (i % 100 == 0) {
-        if (iteration >= (iter_save + 1000) || iteration % 1000 == 0) {
+		/*
+		Set the training save interval ,1000 by default 
+		change 1000 to one epoch modified by edificewang
+		*/
+		int one_epoch =  train_images_num / (net.batch * net.subdivisions);
+
+        if (iteration >= (iter_save + one_epoch) || iteration % one_epoch == 0) {
             iter_save = iteration;
 #ifdef GPU
             if (ngpus != 1) sync_nets(nets, ngpus, 0);
