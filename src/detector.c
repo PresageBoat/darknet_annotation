@@ -71,6 +71,7 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
     srand(time(0));
     int seed = rand();
     int k;
+	//parse network and set every gpu lr
     for (k = 0; k < ngpus; ++k) {
         srand(seed);
 #ifdef GPU

@@ -18,3 +18,4 @@ build/darknet/bad.list
 scripts/testdev2017.txt
 scripts/setup.ps1
 *.html
+*.enc

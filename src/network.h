@@ -107,6 +107,10 @@ void forward_backward_network_gpu(network net, float *x, float *y);
 
 float get_current_seq_subdivisions(network net);
 int get_sequence_value(network net);
+/**
+ * @brief get/set  training network learning rate
+ *use warmup lr policy to train 
+ */
 float get_current_rate(network net);
 int get_current_batch(network net);
 int64_t get_current_iteration(network net);

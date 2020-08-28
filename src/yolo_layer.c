@@ -149,7 +149,9 @@ static inline float clip_value(float val, const float max_val)
     }
     return val;
 }
-
+/**
+ * @brief calc delta  && all ious
+ */
 ious delta_yolo_box(box truth, float *x, float *biases, int n, int index, int i, int j, int lw, int lh, int w, int h, float *delta, float scale, int stride, float iou_normalizer, IOU_LOSS iou_loss, int accumulate, float max_delta)
 {
     ious all_ious = { 0 };
