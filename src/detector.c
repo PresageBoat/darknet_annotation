@@ -307,6 +307,7 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
             if (iteration < net.burn_in * 3) fprintf(stderr, "\n Tensor Cores are disabled until the first %d iterations are reached.", 3 * net.burn_in);
             else fprintf(stderr, "\n Tensor Cores are used.");
         }
+
         printf("\n Iteration(%d):\
 						Current batch loss(%f), \
 						Train avg_loss(%f ), \

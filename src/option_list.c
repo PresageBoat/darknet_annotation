@@ -8,7 +8,7 @@
 list *read_data_cfg(char *filename)
 {
     FILE *file = fopen(filename, "r");
-    if(file == 0) file_error(filename);
+	if (file == 0)		file_error(filename);
     char *line;
     int nu = 0;
     list *options = make_list();

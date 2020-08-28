@@ -1,6 +1,6 @@
 classes= 80
 train  = F:/COCO17/train2017-win.txt
 valid  = F:/COCO17/val2017-win.txt
-names = D:/objectdetection/yolov4/trainmodel/coco2017/coco.names
-backup = D:/objectdetection/yolov4/trainmodel/coco2017/weight
+names = D:/objectdetection/yolov4_annotation/trainmodel/coco2017/coco.names
+backup = D:/objectdetection/yolov4_annotation/trainmodel/coco2017/weight
 

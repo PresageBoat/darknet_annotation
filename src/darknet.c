@@ -556,8 +556,8 @@ void visualize(char *cfgfile, char *weightfile)
 
 void main()
 {
-    char* datacfg = "D:/objectdetection/yolov4/trainmodel/coco2017/coco.data";
-    char* cfgfile = "D:/objectdetection/yolov4/trainmodel/coco2017/yolov4.cfg";
+    char* datacfg = "D:/objectdetection/yolov4_annotation/trainmodel/coco2017/coco.data";
+    char* cfgfile = "D:/objectdetection/yolov4_annotation/trainmodel/coco2017/yolov4.cfg";
     char* weightfile =0;
 
     //Ö¸¶¨gpuµÄid
