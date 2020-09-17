@@ -19,3 +19,6 @@ scripts/testdev2017.txt
 scripts/setup.ps1
 *.html
 *.enc
+build/darknet/x64/darknet.ilk
+*.exe
+*.ilk
