@@ -104,7 +104,7 @@ typedef struct tree {
 
 // activations.h
 typedef enum {
-    LOGISTIC, RELU, RELU6, RELIE, LINEAR, RAMP, TANH, PLSE, LEAKY, ELU, LOGGY, STAIR, HARDTAN, LHTAN, SELU, GELU, SWISH, MISH, NORM_CHAN, NORM_CHAN_SOFTMAX, NORM_CHAN_SOFTMAX_MAXVAL
+    LOGISTIC, RELU, RELU6, RELIE, LINEAR, RAMP, TANH, PLSE, REVLEAKY, LEAKY, ELU, LOGGY, STAIR, HARDTAN, LHTAN, SELU, GELU, SWISH, MISH, HARD_MISH, NORM_CHAN, NORM_CHAN_SOFTMAX, NORM_CHAN_SOFTMAX_MAXVAL
 }ACTIVATION;
 
 // parser.h
@@ -142,6 +142,16 @@ typedef enum{
     MULT, ADD, SUB, DIV
 } BINARY_ACTIVATION;
 
+// blas.h
+typedef struct contrastive_params {
+    float sim;
+    float exp_sim;
+    float P;
+    int i, j;
+    int time_step_i, time_step_j;
+} contrastive_params;
+
+
 // layer.h
 typedef enum {
     CONVOLUTIONAL,
@@ -166,6 +176,7 @@ typedef enum {
     GRU,
     LSTM,
     CONV_LSTM,
+    HISTORY,
     CRNN,
     BATCHNORM,
     NETWORK,
@@ -180,7 +191,8 @@ typedef enum {
     LOGXENT,
     L2NORM,
     EMPTY,
-    BLANK
+    BLANK,
+    CONTRASTIVE
 } LAYER_TYPE;
 
 // layer.h
@@ -205,6 +217,7 @@ typedef struct update_args {
 struct layer {
     LAYER_TYPE type;
     ACTIVATION activation;
+    ACTIVATION lstm_activation;
     COST_TYPE cost_type;
     void(*forward)   (struct layer, struct network_state);
     void(*backward)  (struct layer, struct network_state);
@@ -223,6 +236,7 @@ struct layer {
     int flipped;
     int inputs;
     int outputs;
+    float mean_alpha;
     int nweights;
     int nbiases;
     int extra;
@@ -231,6 +245,7 @@ struct layer {
     int out_h, out_w, out_c;
     int n;
     int max_boxes;
+    int truth_size;
     int groups;
     int group_id;
     int size;
@@ -241,8 +256,10 @@ struct layer {
     int dilation;
     int antialiasing;
     int maxpool_depth;
+    int maxpool_zero_nonmax;
     int out_channels;
-    int reverse;
+    float reverse;
+    int coordconv;
     int flatten;
     int spatial;
     int pad;
@@ -257,18 +274,23 @@ struct layer {
     int keep_delta_gpu;
     int optimized_memory;
     int steps;
+    int history_size;
+    int bottleneck;
+    float time_normalizer;
     int state_constrain;
     int hidden;
     int truth;
     float smooth;
     float dot;
     int deform;
+    int grad_centr;
     int sway;
     int rotate;
     int stretch;
     int stretch_sway;
     float angle;
     float jitter;
+    float resize;
     float saturation;
     float exposure;
     float shift;
@@ -281,6 +303,15 @@ struct layer {
     int noloss;
     int softmax;
     int classes;
+    int detection;
+    int embedding_layer_id;
+    float *embedding_output;
+    int embedding_size;
+    float sim_thresh;
+    int track_history_size;
+    int dets_for_track;
+    int dets_for_show;
+    float track_ciou_norm;
     int coords;
     int background;
     int rescore;
@@ -351,12 +382,17 @@ struct layer {
     float **layers_output;
     float **layers_delta;
     WEIGHTS_TYPE_T weights_type;
-    WEIGHTS_NORMALIZATION_T weights_normalizion;
+    WEIGHTS_NORMALIZATION_T weights_normalization;
     int   * map;
     int   * counts;
     float ** sums;
     float * rand;
     float * cost;
+    int *labels;
+    float *cos_sim;
+    float *exp_cos_sim;
+    float *p_constrastive;
+    contrastive_params *contrast_p_gpu;
     float * state;
     float * prev_state;
     float * forgot_state;
@@ -380,10 +416,13 @@ struct layer {
     float *weight_updates;
 
     float scale_x_y;
+    int objectness_smooth;
     float max_delta;
     float uc_normalizer;
     float iou_normalizer;
+    float obj_normalizer;
     float cls_normalizer;
+    float delta_normalizer;
     IOU_LOSS iou_loss;
     IOU_LOSS iou_thresh_kind;
     NMS_KIND nms_kind;
@@ -514,6 +553,8 @@ struct layer {
     float *r_gpu;
     float *h_gpu;
     float *stored_h_gpu;
+    float *bottelneck_hi_gpu;
+    float *bottelneck_delta_gpu;
 
     float *temp_gpu;
     float *temp2_gpu;
@@ -594,9 +635,11 @@ struct layer {
 
     float * input_antialiasing_gpu;
     float * output_gpu;
+    float * output_avg_gpu;
     float * activation_input_gpu;
     float * loss_gpu;
     float * delta_gpu;
+    float * cos_sim_gpu;
     float * rand_gpu;
     float * drop_blocks_scale;
     float * drop_blocks_scale_gpu;
@@ -648,77 +691,84 @@ typedef enum {
 // network.h
 typedef struct network {
     int n;
-    int batch;//  ::(*.cfg )batch/subdivisions 1  by default
-    uint64_t *seen;// 0 by default
-    int *cur_iteration;// 0 by default
-    float loss_scale;// 1 by default
+    int batch;
+    uint64_t *seen;
+    int *cur_iteration;
+    float loss_scale;
     int *t;
     float epoch;
-    int subdivisions;// 1 by default
+    int subdivisions;
     layer *layers;
     float *output;
-    learning_rate_policy policy;//constant by default
+    learning_rate_policy policy;
     int benchmark_layers;
+    int *total_bbox;
+    int *rewritten_bbox;
 
-    float learning_rate;// 0.001 by default
-    float learning_rate_min;// 0.00001 by default
+    float learning_rate;
+    float learning_rate_min;
     float learning_rate_max;
-    int batches_per_cycle;// network->max_batches by default
-    int batches_cycle_mult;// 2 by default
-    float momentum;// 0.9 by default
-    float decay;// 0.0001 by default
-    float gamma;//1 by default
-    float scale;//1 by default
-    float power;//4 by default
-    int time_steps;// 1 by default
-    int step;//1 by default
-    int max_batches;// 0 by default
+    int batches_per_cycle;
+    int batches_cycle_mult;
+    float momentum;
+    float decay;
+    float gamma;
+    float scale;
+    float power;
+    int time_steps;
+    int step;
+    int max_batches;
     int num_boxes;
     int train_images_num;
-    float *seq_scales;//(*.cfg)seq_scales=1  by default
-    float *scales;//(*.cfg)scales=.1,.1 by default ,must set while lr_policy=steps
-    int   *steps;//(*.cfg)steps=400000,450000 by default,must set while lr_policy=steps
+    float *seq_scales;
+    float *scales;
+    int   *steps;
     int num_steps;
-    int burn_in;//0 by default
-    int cudnn_half;// depends on gpus compute capability
+    int burn_in;
+    int cudnn_half;
 
-    int adam;//0 by default
-    float B1;//0.9 by default
-    float B2;//0.999 by default
-    float eps;//0.000001 by default
+    int adam;
+    float B1;
+    float B2;
+    float eps;
 
-    int inputs;//net->h * net->w * net->c by default
+    int inputs;
     int outputs;
     int truths;
     int notruth;
-    int h, w, c;//0 by default
-    int max_crop;//net->w*2 by default
-    int min_crop;//net->w by default
+    int h, w, c;
+    int max_crop;
+    int min_crop;
     float max_ratio;
     float min_ratio;
     int center;
     int flip; // horizontal flip 50% probability augmentaiont for classifier training (default = 1)
-    int gaussian_noise;//0 by default
-    int blur;//0 by default
-    int mixup;//0 by default
-    float label_smooth_eps;//0.0f by default
-    int resize_step;//the gap of random resize 32 by default
-    int attention;////0 by default
+    int gaussian_noise;
+    int blur;
+    int mixup;
+    float label_smooth_eps;
+    int resize_step;
+    int attention;
     int adversarial;    
-    float adversarial_lr;//0 by default
-    int letter_box;//0 by default
-    float angle;//0 by default
-    float aspect;//1 by default
-    float exposure;//1 by default
-    float saturation;//1 by default
-    float hue;//0 by default
+    float adversarial_lr;
+    float max_chart_loss;
+    int letter_box;
+    int mosaic_bound;
+    int contrastive;
+    int contrastive_jit_flip;
+    int unsupervised;
+    float angle;
+    float aspect;
+    float exposure;
+    float saturation;
+    float hue;
     int random;
-    int track;// 0 by default
-    int augment_speed;// 2 by default
+    int track;
+    int augment_speed;
     int sequential_subdivisions;
-    int init_sequential_subdivisions;// net->subdivisions by default
+    int init_sequential_subdivisions;
     int current_subdivision;
-    int try_fix_nan;// 0 by default
+    int try_fix_nan;
 
     int gpu_index;
     tree *hierarchy;
@@ -732,6 +782,9 @@ typedef struct network {
     float *cost;
     float clip;
 
+//#ifdef GPU
+    //float *input_gpu;
+    //float *truth_gpu;
     float *delta_gpu;
     float *output_gpu;
 
@@ -750,10 +803,10 @@ typedef struct network {
     float *global_delta_gpu;
     float *state_delta_gpu;
     size_t max_delta_gpu_size;
-
-    int optimized_memory;// 0 by default
-    int dynamic_minibatch;// 0 by default
-    size_t workspace_size_limit;//1024MB by default
+//#endif  // GPU
+    int optimized_memory;
+    int dynamic_minibatch;
+    size_t workspace_size_limit;
 } network;
 
 // network.h
@@ -825,6 +878,10 @@ typedef struct detection{
     int sort_class;
     float *uc; // Gaussian_YOLOv3 - tx,ty,tw,th uncertainty
     int points; // bit-0 - center, bit-1 - top-left-corner, bit-2 - bottom-right-corner
+    float *embeddings;  // embeddings for tracking
+    int embedding_size;
+    float sim;
+    int track_id;    
 } detection;
 
 // network.c -batch inference
@@ -870,6 +927,7 @@ typedef struct load_args {
     int nh;
     int nw;
     int num_boxes;
+    int truth_size;
     int min, max, size;
     int classes;
     int background;
@@ -880,9 +938,13 @@ typedef struct load_args {
     int track;
     int augment_speed;
     int letter_box;
+    int mosaic_bound;
     int show_imgs;
     int dontuse_opencv;
+    int contrastive;
+    int contrastive_jit_flip;
     float jitter;
+    float resize;
     int flip;
     int gaussian_noise;
     int blur;
@@ -903,6 +965,7 @@ typedef struct load_args {
 // data.h
 typedef struct box_label {
     int id;
+    int track_id;
     float x, y, w, h;
     float left, right, top, bottom;
 } box_label;
@@ -920,7 +983,6 @@ typedef struct box_label {
 //    node *front;
 //    node *back;
 //} list;
-
 // -----------------------------------------------------
 
 
@@ -929,6 +991,7 @@ LIB_API network *load_network(char *cfg, char *weights, int clear);
 LIB_API network *load_network_custom(char *cfg, char *weights, int clear, int batch);
 LIB_API network *load_network(char *cfg, char *weights, int clear);
 LIB_API void free_network(network net);
+LIB_API void free_network_ptr(network* net);
 
 // network.c
 LIB_API load_args get_base_args(network *net);
@@ -1015,6 +1078,10 @@ double get_time();
 void stop_timer_and_show();
 void stop_timer_and_show_name(char *name);
 void show_total_time();
+
+LIB_API void set_track_id(detection *new_dets, int new_dets_num, float thresh, float sim_thresh, float track_ciou_norm, int deque_size, int dets_for_track, int dets_for_show);
+LIB_API int fill_remaining_id(detection *new_dets, int new_dets_num, int new_track_id, float thresh);
+
 
 // gemm.h
 LIB_API void init_cpu();
