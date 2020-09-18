@@ -296,10 +296,7 @@
     <ClInclude Include="..\..\src\scale_channels_layer.h" />
     <ClInclude Include="..\..\src\shortcut_layer.h" />
     <ClInclude Include="..\..\src\softmax_layer.h" />
-    <ClInclude Include="..\..\src\stb_image.h" />
-    <ClInclude Include="..\..\src\stb_image_write.h" />
     <ClInclude Include="..\..\src\tree.h" />
-    <ClInclude Include="..\..\src\unistd.h" />
     <ClInclude Include="..\..\src\upsample_layer.h" />
     <ClInclude Include="..\..\src\utils.h" />
     <ClInclude Include="..\..\src\yolo_layer.h" />

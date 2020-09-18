@@ -39,6 +39,7 @@
 #include "upsample_layer.h"
 #include "parser.h"
 
+
 load_args get_base_args(network *net)
 {
     load_args args = { 0 };
@@ -172,6 +173,14 @@ float get_current_rate(network net)
 
             return rate;
         }
+		case	CONSINE:
+		{
+			rate = net.learning_rate;
+			double T = net.max_batches-net.burn_in;
+			double tpi = get_current_batch(net)*M_PI;
+			rate = 0.5*(1 + cos(tpi / T))*rate;
+		}
+
         default:
             fprintf(stderr, "Policy is weird!\n");
             return net.learning_rate;
