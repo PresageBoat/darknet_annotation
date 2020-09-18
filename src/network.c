@@ -173,7 +173,7 @@ float get_current_rate(network net)
 
             return rate;
         }
-		case	CONSINE:
+		case	COSINE:
 		{
 			rate = net.learning_rate;
 			double T = net.max_batches-net.burn_in;
