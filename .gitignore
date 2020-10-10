@@ -22,3 +22,8 @@ scripts/setup.ps1
 build/darknet/x64/darknet.ilk
 *.exe
 *.ilk
+scripts/.idea/inspectionProfiles/profiles_settings.xml
+scripts/.idea/misc.xml
+scripts/.idea/modules.xml
+scripts/.idea/scripts.iml
+scripts/.idea/vcs.xml

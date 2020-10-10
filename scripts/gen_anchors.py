@@ -3,6 +3,8 @@ Created on Feb 20, 2017
 
 @author: jumabek
 '''
+
+# coding: utf-8
 from os import listdir
 from os.path import isfile, join
 import argparse
@@ -49,9 +51,11 @@ def write_anchors_to_file(centroids,X,anchor_file):
     print(anchors.shape)
 
     for i in range(anchors.shape[0]):
-        anchors[i][0]*=width_in_cfg_file/32.
-        anchors[i][1]*=height_in_cfg_file/32.
-         
+        anchors[i][0]*=width_in_cfg_file
+        anchors[i][1]*=height_in_cfg_file
+        #anchors[i][0]*=width_in_cfg_file/32.
+        #anchors[i][1]*=height_in_cfg_file/32.
+
 
     widths = anchors[:,0]
     sorted_indices = np.argsort(widths)
@@ -106,11 +110,11 @@ def kmeans(X,centroids,eps,anchor_file):
 
 def main(argv):
     parser = argparse.ArgumentParser()
-    parser.add_argument('-filelist', default = '\\path\\to\\voc\\filelist\\train.txt', 
+    parser.add_argument('-filelist', default = 'F:/交通数据集/车辆类型检测/车辆检测/训练数据/train.txt',
                         help='path to filelist\n' )
-    parser.add_argument('-output_dir', default = 'generated_anchors/anchors', type = str, 
+    parser.add_argument('-output_dir', default = 'F:/交通数据集/车辆类型检测/车辆检测/训练数据/', type = str,
                         help='Output anchor directory\n' )  
-    parser.add_argument('-num_clusters', default = 0, type = int, 
+    parser.add_argument('-num_clusters', default = 9, type = int,
                         help='number of clusters\n' )  
 
    
@@ -119,7 +123,7 @@ def main(argv):
     if not os.path.exists(args.output_dir):
         os.mkdir(args.output_dir)
 
-    f = open(args.filelist)
+    f = open(args.filelist,'r',encoding='utf-8')
   
     lines = [line.rstrip('\n') for line in f.readlines()]
     
@@ -131,9 +135,11 @@ def main(argv):
         #line = line.replace('images','labels')
         #line = line.replace('img1','labels')
         line = line.replace('JPEGImages','labels')        
-        
+        line = line.replace('train','labels')
+
 
         line = line.replace('.jpg','.txt')
+        line = line.replace('.JPG','.txt')
         line = line.replace('.png','.txt')
         print(line)
         f2 = open(line)

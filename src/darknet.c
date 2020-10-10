@@ -429,161 +429,161 @@ void visualize(char *cfgfile, char *weightfile)
 #endif
 }
 
-//int main(int argc, char **argv)
-//{
-//#ifdef _DEBUG
-//	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-//#endif
-//
-//	int i;
-//	for (i = 0; i < argc; ++i) {
-//		if (!argv[i]) continue;
-//		strip_args(argv[i]);
-//	}
-//
-//    //test_resize("data/bad.jpg");
-//    //test_box();
-//    //test_convolutional_layer();
-//    if(argc < 2){
-//        fprintf(stderr, "usage: %s <function>\n", argv[0]);
-//        return 0;
-//    }
-//    gpu_index = find_int_arg(argc, argv, "-i", 0);
-//    if(find_arg(argc, argv, "-nogpu")) {
-//        gpu_index = -1;
-//        printf("\n Currently Darknet doesn't support -nogpu flag. If you want to use CPU - please compile Darknet with GPU=0 in the Makefile, or compile darknet_no_gpu.sln on Windows.\n");
-//        exit(-1);
-//    }
-//
-//#ifndef GPU
-//    gpu_index = -1;
-//    printf(" GPU isn't used \n");
-//    init_cpu();
-//#else   // GPU
-//    if(gpu_index >= 0){
-//        cuda_set_device(gpu_index);
-//        CHECK_CUDA(cudaSetDeviceFlags(cudaDeviceScheduleBlockingSync));
-//    }
-//
-//    show_cuda_cudnn_info();
-//    cuda_debug_sync = find_arg(argc, argv, "-cuda_debug_sync");
-//
-//#ifdef CUDNN_HALF
-//    printf(" CUDNN_HALF=1 \n");
-//#endif  // CUDNN_HALF
-//
-//#endif  // GPU
-//
-//    show_opencv_info();
-//
-//    if (0 == strcmp(argv[1], "average")){
-//        average(argc, argv);
-//    } else if (0 == strcmp(argv[1], "yolo")){
-//        run_yolo(argc, argv);
-//    } else if (0 == strcmp(argv[1], "voxel")){
-//        run_voxel(argc, argv);
-//    } else if (0 == strcmp(argv[1], "super")){
-//        run_super(argc, argv);
-//    } else if (0 == strcmp(argv[1], "detector")){
-//        run_detector(argc, argv);
-//    } else if (0 == strcmp(argv[1], "detect")){
-//        float thresh = find_float_arg(argc, argv, "-thresh", .24);
-//		int ext_output = find_arg(argc, argv, "-ext_output");
-//        char *filename = (argc > 4) ? argv[4]: 0;
-//        test_detector("cfg/coco.data", argv[2], argv[3], filename, thresh, 0.5, 0, ext_output, 0, NULL, 0, 0);
-//    } else if (0 == strcmp(argv[1], "cifar")){
-//        run_cifar(argc, argv);
-//    } else if (0 == strcmp(argv[1], "go")){
-//        run_go(argc, argv);
-//    } else if (0 == strcmp(argv[1], "rnn")){
-//        run_char_rnn(argc, argv);
-//    } else if (0 == strcmp(argv[1], "vid")){
-//        run_vid_rnn(argc, argv);
-//    } else if (0 == strcmp(argv[1], "coco")){
-//        run_coco(argc, argv);
-//    } else if (0 == strcmp(argv[1], "classify")){
-//        predict_classifier("cfg/imagenet1k.data", argv[2], argv[3], argv[4], 5);
-//    } else if (0 == strcmp(argv[1], "classifier")){
-//        run_classifier(argc, argv);
-//    } else if (0 == strcmp(argv[1], "art")){
-//        run_art(argc, argv);
-//    } else if (0 == strcmp(argv[1], "tag")){
-//        run_tag(argc, argv);
-//    } else if (0 == strcmp(argv[1], "compare")){
-//        run_compare(argc, argv);
-//    } else if (0 == strcmp(argv[1], "dice")){
-//        run_dice(argc, argv);
-//    } else if (0 == strcmp(argv[1], "writing")){
-//        run_writing(argc, argv);
-//    } else if (0 == strcmp(argv[1], "3d")){
-//        composite_3d(argv[2], argv[3], argv[4], (argc > 5) ? atof(argv[5]) : 0);
-//    } else if (0 == strcmp(argv[1], "test")){
-//        test_resize(argv[2]);
-//    } else if (0 == strcmp(argv[1], "captcha")){
-//        run_captcha(argc, argv);
-//    } else if (0 == strcmp(argv[1], "nightmare")){
-//        run_nightmare(argc, argv);
-//    } else if (0 == strcmp(argv[1], "rgbgr")){
-//        rgbgr_net(argv[2], argv[3], argv[4]);
-//    } else if (0 == strcmp(argv[1], "reset")){
-//        reset_normalize_net(argv[2], argv[3], argv[4]);
-//    } else if (0 == strcmp(argv[1], "denormalize")){
-//        denormalize_net(argv[2], argv[3], argv[4]);
-//    } else if (0 == strcmp(argv[1], "statistics")){
-//        statistics_net(argv[2], argv[3]);
-//    } else if (0 == strcmp(argv[1], "normalize")){
-//        normalize_net(argv[2], argv[3], argv[4]);
-//    } else if (0 == strcmp(argv[1], "rescale")){
-//        rescale_net(argv[2], argv[3], argv[4]);
-//    } else if (0 == strcmp(argv[1], "ops")){
-//        operations(argv[2]);
-//    } else if (0 == strcmp(argv[1], "speed")){
-//        speed(argv[2], (argc > 3 && argv[3]) ? atoi(argv[3]) : 0);
-//    } else if (0 == strcmp(argv[1], "oneoff")){
-//        oneoff(argv[2], argv[3], argv[4]);
-//    } else if (0 == strcmp(argv[1], "partial")){
-//        partial(argv[2], argv[3], argv[4], atoi(argv[5]));
-//    } else if (0 == strcmp(argv[1], "visualize")){
-//        visualize(argv[2], (argc > 3) ? argv[3] : 0);
-//    } else if (0 == strcmp(argv[1], "imtest")){
-//        test_resize(argv[2]);
-//    } else {
-//        fprintf(stderr, "Not an option: %s\n", argv[1]);
-//    }
-//    return 0;
-//}
-
-
-void main()
+int main(int argc, char **argv)
 {
-    char* datacfg = "D:/objectdetection/yolov4_annotation/trainmodel/coco2017/coco.data";
-    char* cfgfile = "D:/objectdetection/yolov4_annotation/trainmodel/coco2017/yolov4.cfg";
-    char* weightfile =0;
+#ifdef _DEBUG
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
 
-    //指定gpu的id
-    int gpus_pre[1] = { 0 };
-    int* gpus = gpus_pre;
-    //和gpus 里面gpu的个数对应
-    int ngpus = 1;
-    //0-无效  1-有效
-    int clear = 0;
+	int i;
+	for (i = 0; i < argc; ++i) {
+		if (!argv[i]) continue;
+		strip_args(argv[i]);
+	}
 
-    //0-无效 1-有效
-    int dont_show = 1;
+    //test_resize("data/bad.jpg");
+    //test_box();
+    //test_convolutional_layer();
+    if(argc < 2){
+        fprintf(stderr, "usage: %s <function>\n", argv[0]);
+        return 0;
+    }
+    gpu_index = find_int_arg(argc, argv, "-i", 0);
+    if(find_arg(argc, argv, "-nogpu")) {
+        gpu_index = -1;
+        printf("\n Currently Darknet doesn't support -nogpu flag. If you want to use CPU - please compile Darknet with GPU=0 in the Makefile, or compile darknet_no_gpu.sln on Windows.\n");
+        exit(-1);
+    }
 
-    //0-不计算val的map 1-不计算val的map
-    int calc_map = 1;
+#ifndef GPU
+    gpu_index = -1;
+    printf(" GPU isn't used \n");
+    init_cpu();
+#else   // GPU
+    if(gpu_index >= 0){
+        cuda_set_device(gpu_index);
+        CHECK_CUDA(cudaSetDeviceFlags(cudaDeviceScheduleBlockingSync));
+    }
 
-    //-1 不映射  非0 映射到对应的端口
-    int mjpeg_port = -1;
+    show_cuda_cudnn_info();
+    cuda_debug_sync = find_arg(argc, argv, "-cuda_debug_sync");
 
-    //0-无效 1-有效
-    int show_imgs = 0;
+#ifdef CUDNN_HALF
+    printf(" CUDNN_HALF=1 \n");
+#endif  // CUDNN_HALF
 
-    //0-无效 1-有效
-    int benchmark_layers = 0;
-    char* chart_path = "";
+#endif  // GPU
 
-    train_detector(datacfg, cfgfile, weightfile, gpus, ngpus, clear,
-        dont_show, calc_map, mjpeg_port, show_imgs, benchmark_layers, chart_path);
+    show_opencv_info();
+
+    if (0 == strcmp(argv[1], "average")){
+        average(argc, argv);
+    } else if (0 == strcmp(argv[1], "yolo")){
+        run_yolo(argc, argv);
+    } else if (0 == strcmp(argv[1], "voxel")){
+        run_voxel(argc, argv);
+    } else if (0 == strcmp(argv[1], "super")){
+        run_super(argc, argv);
+    } else if (0 == strcmp(argv[1], "detector")){
+        run_detector(argc, argv);
+    } else if (0 == strcmp(argv[1], "detect")){
+        float thresh = find_float_arg(argc, argv, "-thresh", .24);
+		int ext_output = find_arg(argc, argv, "-ext_output");
+        char *filename = (argc > 4) ? argv[4]: 0;
+        test_detector("cfg/coco.data", argv[2], argv[3], filename, thresh, 0.5, 0, ext_output, 0, NULL, 0, 0);
+    } else if (0 == strcmp(argv[1], "cifar")){
+        run_cifar(argc, argv);
+    } else if (0 == strcmp(argv[1], "go")){
+        run_go(argc, argv);
+    } else if (0 == strcmp(argv[1], "rnn")){
+        run_char_rnn(argc, argv);
+    } else if (0 == strcmp(argv[1], "vid")){
+        run_vid_rnn(argc, argv);
+    } else if (0 == strcmp(argv[1], "coco")){
+        run_coco(argc, argv);
+    } else if (0 == strcmp(argv[1], "classify")){
+        predict_classifier("cfg/imagenet1k.data", argv[2], argv[3], argv[4], 5);
+    } else if (0 == strcmp(argv[1], "classifier")){
+        run_classifier(argc, argv);
+    } else if (0 == strcmp(argv[1], "art")){
+        run_art(argc, argv);
+    } else if (0 == strcmp(argv[1], "tag")){
+        run_tag(argc, argv);
+    } else if (0 == strcmp(argv[1], "compare")){
+        run_compare(argc, argv);
+    } else if (0 == strcmp(argv[1], "dice")){
+        run_dice(argc, argv);
+    } else if (0 == strcmp(argv[1], "writing")){
+        run_writing(argc, argv);
+    } else if (0 == strcmp(argv[1], "3d")){
+        composite_3d(argv[2], argv[3], argv[4], (argc > 5) ? atof(argv[5]) : 0);
+    } else if (0 == strcmp(argv[1], "test")){
+        test_resize(argv[2]);
+    } else if (0 == strcmp(argv[1], "captcha")){
+        run_captcha(argc, argv);
+    } else if (0 == strcmp(argv[1], "nightmare")){
+        run_nightmare(argc, argv);
+    } else if (0 == strcmp(argv[1], "rgbgr")){
+        rgbgr_net(argv[2], argv[3], argv[4]);
+    } else if (0 == strcmp(argv[1], "reset")){
+        reset_normalize_net(argv[2], argv[3], argv[4]);
+    } else if (0 == strcmp(argv[1], "denormalize")){
+        denormalize_net(argv[2], argv[3], argv[4]);
+    } else if (0 == strcmp(argv[1], "statistics")){
+        statistics_net(argv[2], argv[3]);
+    } else if (0 == strcmp(argv[1], "normalize")){
+        normalize_net(argv[2], argv[3], argv[4]);
+    } else if (0 == strcmp(argv[1], "rescale")){
+        rescale_net(argv[2], argv[3], argv[4]);
+    } else if (0 == strcmp(argv[1], "ops")){
+        operations(argv[2]);
+    } else if (0 == strcmp(argv[1], "speed")){
+        speed(argv[2], (argc > 3 && argv[3]) ? atoi(argv[3]) : 0);
+    } else if (0 == strcmp(argv[1], "oneoff")){
+        oneoff(argv[2], argv[3], argv[4]);
+    } else if (0 == strcmp(argv[1], "partial")){
+        partial(argv[2], argv[3], argv[4], atoi(argv[5]));
+    } else if (0 == strcmp(argv[1], "visualize")){
+        visualize(argv[2], (argc > 3) ? argv[3] : 0);
+    } else if (0 == strcmp(argv[1], "imtest")){
+        test_resize(argv[2]);
+    } else {
+        fprintf(stderr, "Not an option: %s\n", argv[1]);
+    }
+    return 0;
 }
+
+
+//void main()
+//{
+//    char* datacfg = "D:/objectdetection/yolov4_annotation/trainmodel/coco2017/coco.data";
+//    char* cfgfile = "D:/objectdetection/yolov4_annotation/trainmodel/coco2017/yolov4.cfg";
+//    char* weightfile =0;
+//
+//    //指定gpu的id
+//    int gpus_pre[1] = { 0 };
+//    int* gpus = gpus_pre;
+//    //和gpus 里面gpu的个数对应
+//    int ngpus = 1;
+//    //0-无效  1-有效
+//    int clear = 0;
+//
+//    //0-无效 1-有效
+//    int dont_show = 1;
+//
+//    //0-不计算val的map 1-不计算val的map
+//    int calc_map = 1;
+//
+//    //-1 不映射  非0 映射到对应的端口
+//    int mjpeg_port = -1;
+//
+//    //0-无效 1-有效
+//    int show_imgs = 0;
+//
+//    //0-无效 1-有效
+//    int benchmark_layers = 0;
+//    char* chart_path = "";
+//
+//    train_detector(datacfg, cfgfile, weightfile, gpus, ngpus, clear,
+//        dont_show, calc_map, mjpeg_port, show_imgs, benchmark_layers, chart_path);
+//}
