@@ -159,6 +159,10 @@ local_layer parse_local(list *options, size_params params)
     return layer;
 }
 
+/**
+ *Special treatment is done to the pad of convolution. When k=1, pad=1 and Pad =0 will not affect the width and height of the output result after convolution
+ *because if(pad) padding=size/2
+ */
 convolutional_layer parse_convolutional(list *options, size_params params)
 {
     int n = option_find_int(options, "filters",1);
